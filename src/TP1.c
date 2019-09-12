@@ -68,12 +68,12 @@ int main(void){
       /* Prendo el led azul */
       gpioWrite( LEDB, ON );
 
-      delay(500);
+      delay(600);
 
       /* Apago el led azul */
       gpioWrite( LEDB, OFF );
 
-      delay(500);
+      delay(600);
 
    }
 

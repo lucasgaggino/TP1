@@ -41,6 +41,11 @@
 #include "sapi.h"       // <= sAPI header
 
 /*==================[macros and definitions]=================================*/
+#define COMPILAR_CODIGO_BLINKY 1
+#define COMPILAR_CODIGO_SWITCH_LEDS 2
+#define COMPILAR_CODIGO COMPILAR_CODIGO_SWITCH_LEDS
+
+
 
 /*==================[internal data declaration]==============================*/
 
@@ -54,11 +59,14 @@
 
 /*==================[external functions definition]==========================*/
 
-/* FUNCION PRINCIPAL, PUNTO DE ENTRADA AL PROGRAMA LUEGO DE RESET. */
+
+
+
+
 int main(void){
 
    /* ------------- INICIALIZACIONES ------------- */
-
+#if COMPILAR_CODIGO==COMPILAR_CODIGO_BLINKY
    /* Inicializar la placa */
    boardConfig();
 
@@ -68,12 +76,12 @@ int main(void){
       /* Prendo el led azul */
       gpioWrite( LEDB, ON );
 
-      delay(600);
+      delay(500);
 
       /* Apago el led azul */
       gpioWrite( LEDB, OFF );
 
-      delay(600);
+      delay(500);
 
    }
 
@@ -82,4 +90,47 @@ int main(void){
    return 0 ;
 }
 
+#elif  COMPILAR_CODIGO==COMPILAR_CODIGO_SWITCH_LEDS
+
+/* FUNCION PRINCIPAL, PUNTO DE ENTRADA AL PROGRAMA LUEGO DE RESET. */
+
+
+   /* ------------- INICIALIZACIONES ------------- */
+
+   /* Inicializar la placa */
+   boardConfig();
+
+   gpioConfig( GPIO0, GPIO_INPUT );
+
+   gpioConfig( GPIO1, GPIO_OUTPUT );
+
+   /* Variable para almacenar el valor de tecla leido */
+   bool_t valor;
+
+   /* ------------- REPETIR POR SIEMPRE ------------- */
+   while(1) {
+
+      valor = !gpioRead( TEC1 );
+      gpioWrite( LEDB, valor );
+
+      valor = !gpioRead( TEC2 );
+      gpioWrite( LED1, valor );
+
+      valor = !gpioRead( TEC3 );
+      gpioWrite( LED2, valor );
+
+      valor = !gpioRead( TEC4 );
+      gpioWrite( LED3, valor );
+
+      valor = !gpioRead( GPIO0 );
+      gpioWrite( GPIO1, valor );
+
+   }
+
+   /* NO DEBE LLEGAR NUNCA AQUI, debido a que a este programa no es llamado
+      por ningun S.O. */
+   return 0 ;
+
+#endif
+   }
 /*==================[end of file]============================================*/

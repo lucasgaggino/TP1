@@ -39,6 +39,7 @@
 
 //#include "blinky.h"   // <= own header (optional)
 #include "TP1.h"       // <= sAPI header
+#include "sapi_delay.h"
 
 /*==================[macros and definitions]=================================*/
 #define COMPILAR_CODIGO_BLINKY 1
@@ -46,7 +47,7 @@
 #define COMPILAR_CODIGO_TICKHOOK 3
 
 
-#define COMPILAR_CODIGO COMPILAR_CODIGO_BLINKY
+#define COMPILAR_CODIGO 3
 
 
 

@@ -38,7 +38,7 @@
 /*==================[inclusions]=============================================*/
 
 //#include "blinky.h"   // <= own header (optional)
-#include "sapi.h"       // <= sAPI header
+#include "TP1.h"       // <= sAPI header
 
 /*==================[macros and definitions]=================================*/
 #define COMPILAR_CODIGO_BLINKY 1

@@ -39,15 +39,16 @@
 
 //#include "blinky.h"   // <= own header (optional)
 #include "TP1.h"       // <= sAPI header
-#include "sapi_delay.h"
+
 
 /*==================[macros and definitions]=================================*/
 #define COMPILAR_CODIGO_BLINKY 1
 #define COMPILAR_CODIGO_SWITCH_LEDS 2
 #define COMPILAR_CODIGO_TICKHOOK 3
+#define COMPILAR_CODIGO_C_DEBUGGER 4
 
 
-#define COMPILAR_CODIGO 3
+#define COMPILAR_CODIGO 4
 
 
 
@@ -196,8 +197,35 @@ int main(void){
        por ningun S.O. */
     return 0 ;
  }
+#elif COMPILAR_CODIGO == COMPILAR_CODIGO_C_DEBUGGER
+ /* Inicializar la placa */
+ boardConfig();
+ /* Inicializar UART_USB a 115200 baudios */
+ uartConfig( UART_USB, 115200 );
 
+ uartWriteString( UART_USB, "DEBUG c/sAPI\r\n" );
 
+ /* ------------- REPETIR POR SIEMPRE ------------- */
+ while(1) {
+
+    /* Prendo el led azul */
+    gpioWrite( LEDB, ON );
+    uartWriteString( UART_USB, "LED Toggle\n" ); //digo que prendi el led
+    delay(500);
+
+    /* Apago el led azul */
+    gpioWrite( LEDB, OFF );
+    uartWriteString( UART_USB, "LED Toggle\n" ); //digo que apague el led
+    delay(500);
+
+ }
+ //supongo que anda, use el codigo del blinky y mando como informacion por el usar usando como esta en uart.c en los ejemplos
+ //cuando prendo y cuando apago el led
+
+ /* NO DEBE LLEGAR NUNCA AQUI, debido a que a este programa no es llamado
+    por ningun S.O. */
+ return 0 ;
+ }
 #endif
 
  /* FUNCION que se ejecuta cada vez que ocurre un Tick. */

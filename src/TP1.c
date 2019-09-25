@@ -37,21 +37,23 @@
 
 /*==================[inclusions]=============================================*/
 
-//#include "blinky.h"   // <= own header (optional)
+
 #include "TP1.h"       // <= sAPI header
 
 
 /*==================[macros and definitions]=================================*/
-#define COMPILAR_CODIGO_BLINKY 1
-#define COMPILAR_CODIGO_SWITCH_LEDS 2
-#define COMPILAR_CODIGO_TICKHOOK 3
-#define COMPILAR_CODIGO_C_DEBUGGER 4
+#define COMPILAR_CODIGO_BLINKY (1)
+#define COMPILAR_CODIGO_SWITCH_LEDS (2)
+#define COMPILAR_CODIGO_TICKHOOK (3)
+#define COMPILAR_CODIGO_C_DEBUGGER (4)
+#define COMPILAR_CODIGO_PUNTO_6 (5)
 
 
-#define COMPILAR_CODIGO 4
+#define COMPILAR_CODIGO (COMPILAR_CODIGO_TICKHOOK)
 
 
-
+#define TICKRATE_MS 20
+#define LED_TOGGLE_MS 1000
 /*==================[internal data declaration]==============================*/
 
 /*==================[internal functions declaration]=========================*/
@@ -162,39 +164,30 @@ int main(void){
     /* Inicializar la placa */
     boardConfig();
 
-    /* Inicializar el conteo de Ticks con resolucion de 50ms (se ejecuta
-       periodicamente una interrupcion cada 50ms que incrementa un contador de
-       Ticks obteniendose una base de tiempos). */
-    tickConfig( 50 );
 
-    /* Se agrega ademas un "tick hook" nombrado myTickHook. El tick hook es
-       simplemente una funcion que se ejecutara peri­odicamente con cada
-       interrupcion de Tick, este nombre se refiere a una funcion "enganchada"
-       a una interrupcion.
-       El segundo parametro es el parametro que recibe la funcion myTickHook
-       al ejecutarse. En este ejemplo se utiliza para pasarle el led a titilar.
-    */
+    tickConfig( TICKRATE_MS );
+
+
     tickCallbackSet( myTickHook, (void*)LEDR );
-    delay(1000);
+    delay(LED_TOGGLE_MS);
 
-    /* ------------- REPETIR POR SIEMPRE ------------- */
+
     while(1) {
-       tickCallbackSet( myTickHook, (void*)LEDG );
-       delay(1000);
+
+       /*tickCallbackSet( myTickHook, (void*)LEDG );
+       delay(LED_TOGGLE_MS);
        tickCallbackSet( myTickHook, (void*)LEDB );
-       delay(1000);
+       delay(LED_TOGGLE_MS);
        tickCallbackSet( myTickHook, (void*)LED1 );
-       delay(1000);
+       delay(LED_TOGGLE_MS);
        tickCallbackSet( myTickHook, (void*)LED2 );
-       delay(1000);
+       delay(LED_TOGGLE_MS);
        tickCallbackSet( myTickHook, (void*)LED3 );
-       delay(1000);
+       delay(LED_TOGGLE_MS);
        tickCallbackSet( myTickHook, (void*)LEDR );
-       delay(1000);
+       delay(LED_TOGGLE_MS);*/
     }
 
-    /* NO DEBE LLEGAR NUNCA AQUI, debido a que a este programa no es llamado
-       por ningun S.O. */
     return 0 ;
  }
 #elif COMPILAR_CODIGO == COMPILAR_CODIGO_C_DEBUGGER
@@ -215,7 +208,7 @@ int main(void){
 
     /* Apago el led azul */
     gpioWrite( LEDB, OFF );
-    uartWriteString( UART_USB, "LED Toggle\r\n" ); //digo que apague el led
+    uartWriteString( UART_USB, "LED Toggle\n" ); //digo que apague el led
     delay(500);
 
  }
@@ -225,6 +218,52 @@ int main(void){
  /* NO DEBE LLEGAR NUNCA AQUI, debido a que a este programa no es llamado
     por ningun S.O. */
  return 0 ;
+ }
+
+#elif COMPILAR_CODIGO==COMPILAR_CODIGO_PUNTO_6
+
+/* FUNCION PRINCIPAL, PUNTO DE ENTRADA AL PROGRAMA LUEGO DE RESET. */
+
+
+   /* ------------- INICIALIZACIONES ------------- */
+
+   /* Inicializar la placa */
+   boardConfig();
+
+   gpioConfig( GPIO0, GPIO_INPUT );
+
+   gpioConfig( GPIO1, GPIO_OUTPUT );
+
+   /* Variable para almacenar el valor de tecla leido */
+
+
+   /* ------------- REPETIR POR SIEMPRE ------------- */
+   while(1) {
+
+      if(!gpioRead( TEC1 )){ //no se si los lee como 0 o 1 cuando no estan presionados, si los lee como uno hay que ponerle un !
+    	  gpioWrite( LEDB, ON );
+    	  delay(500);
+    	  gpioWrite( LEDB, OFF );
+
+    	  gpioWrite( LED1, ON );
+      	  delay(500);
+      	  gpioWrite( LED1, OFF );
+
+      	  gpioWrite( LED2, ON );
+      	  delay(500);
+      	  gpioWrite( LED2, OFF );
+
+      	  gpioWrite( LED3, ON );
+      	  delay(500);
+      	  gpioWrite( LED3, OFF );
+
+      }-/
+
+   }
+
+   /* NO DEBE LLEGAR NUNCA AQUI, debido a que a este programa no es llamado
+      por ningun S.O. */
+   return 0 ;
  }
 #endif
 

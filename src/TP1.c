@@ -210,12 +210,12 @@ int main(void){
 
     /* Prendo el led azul */
     gpioWrite( LEDB, ON );
-    uartWriteString( UART_USB, "LED Toggle\n" ); //digo que prendi el led
+    uartWriteString( UART_USB, "LED Toggle\r\n" ); //digo que prendi el led
     delay(500);
 
     /* Apago el led azul */
     gpioWrite( LEDB, OFF );
-    uartWriteString( UART_USB, "LED Toggle\n" ); //digo que apague el led
+    uartWriteString( UART_USB, "LED Toggle\r\n" ); //digo que apague el led
     delay(500);
 
  }

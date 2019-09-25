@@ -33,15 +33,22 @@
 
 /* Date: 2015-09-23 */
 
-#ifndef _BLINKY_H_
-#define _BLINKY_H_
+#ifndef _TP1_H_
+#define _TP1_H_
 
-// agregue estos tres include, no se si sea esto lo que hay que hacer pero funciono
 #include "sapi_board.h"                  // Use clock peripheral
 #include "sapi_tick.h"                   // Use Systick peripheral
 #include "sapi_gpio.h"                   // Use GPIO peripherals
 #include "sapi_uart.h"                   // Use UART peripherals
 #include "sapi_delay.h"
+
+#endif
+
+
+#ifndef _BLINKY_H_
+#define _BLINKY_H_
+
+
 /*==================[inclusions]=============================================*/
 
 /*==================[cplusplus]==============================================*/

@@ -218,22 +218,15 @@ int main(void){
     delay(500);
 
  }
- //supongo que anda, use el codigo del blinky y mando como informacion por el usar usando como esta en uart.c en los ejemplos
- //cuando prendo y cuando apago el led
 
- /* NO DEBE LLEGAR NUNCA AQUI, debido a que a este programa no es llamado
-    por ningun S.O. */
+
+
  return 0 ;
  }
 
 #elif COMPILAR_CODIGO==COMPILAR_CODIGO_PUNTO_6
 
-/* FUNCION PRINCIPAL, PUNTO DE ENTRADA AL PROGRAMA LUEGO DE RESET. */
 
-
-   /* ------------- INICIALIZACIONES ------------- */
-
-   /* Inicializar la placa */
    boardConfig();
 
    gpioConfig( GPIO0, GPIO_INPUT );
@@ -246,7 +239,7 @@ int main(void){
    /* ------------- REPETIR POR SIEMPRE ------------- */
    while(1) {
 
-      if(!gpioRead( TEC1 )){ //no se si los lee como 0 o 1 cuando no estan presionados, si los lee como uno hay que ponerle un !
+      if(!gpioRead( TEC1 )){
     	  gpioWrite( LEDB, ON );
     	  delay(500);
     	  gpioWrite( LEDB, OFF );
@@ -267,12 +260,9 @@ int main(void){
 
    }
 
-   /* NO DEBE LLEGAR NUNCA AQUI, debido a que a este programa no es llamado
-      por ningun S.O. */
+
    return 0 ;
  }
 #endif
 
- /* FUNCION que se ejecuta cada vez que ocurre un Tick. */
 
-/*==================[end of file]============================================*/

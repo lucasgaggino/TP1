@@ -52,24 +52,29 @@
 #define COMPILAR_CODIGO (COMPILAR_CODIGO_TICKHOOK)
 
 
-#define TICKRATE_MS 20
+#define TICKRATE_MS 50
 #define LED_TOGGLE_MS 1000
 /*==================[internal data declaration]==============================*/
-
+unsigned int delayer=0;
 /*==================[internal functions declaration]=========================*/
 void myTickHook( void *ptr ){
+	if(delayer==9){
+	 // modificacion para disminuir la frecuencia 10 vecs
+		static bool_t ledState = OFF;
+		gpioMap_t led = (gpioMap_t)ptr;
 
-    static bool_t ledState = OFF;
 
-    gpioMap_t led = (gpioMap_t)ptr;
+		if( ledState ){
+			ledState = OFF;
+		}
+		else{
+			ledState = ON;
+		}
+		gpioWrite( led, ledState );
+		delayer=0;
+	}
+	else{delayer++;}
 
-    if( ledState ){
-       ledState = OFF;
-    }
-    else{
-       ledState = ON;
-    }
-    gpioWrite( led, ledState );
  }
 
 /*==================[internal data definition]===============================*/
@@ -174,8 +179,9 @@ int main(void){
 
     while(1) {
 
-       /*tickCallbackSet( myTickHook, (void*)LEDG );
+       tickCallbackSet( myTickHook, (void*)LEDG );
        delay(LED_TOGGLE_MS);
+
        tickCallbackSet( myTickHook, (void*)LEDB );
        delay(LED_TOGGLE_MS);
        tickCallbackSet( myTickHook, (void*)LED1 );
@@ -185,7 +191,7 @@ int main(void){
        tickCallbackSet( myTickHook, (void*)LED3 );
        delay(LED_TOGGLE_MS);
        tickCallbackSet( myTickHook, (void*)LEDR );
-       delay(LED_TOGGLE_MS);*/
+       delay(LED_TOGGLE_MS);
     }
 
     return 0 ;

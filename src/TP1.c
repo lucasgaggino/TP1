@@ -49,14 +49,17 @@
 #define COMPILAR_CODIGO_PUNTO_6 (5)
 
 
-#define COMPILAR_CODIGO (COMPILAR_CODIGO_TICKHOOK)
+#define COMPILAR_CODIGO (COMPILAR_CODIGO_BLINKY)
 
 
-#define TICKRATE_MS 50
+#define TICKRATE_MS 1
 #define LED_TOGGLE_MS 1000
 /*==================[internal data declaration]==============================*/
 unsigned int delayer=0;
 /*==================[internal functions declaration]=========================*/
+
+
+
 void myTickHook( void *ptr ){
 	if(delayer==9){
 	 // modificacion para disminuir la frecuencia 10 vecs
@@ -77,6 +80,25 @@ void myTickHook( void *ptr ){
 
  }
 
+int medirT(){
+	int i=10;
+	int t=0;
+	int T=0;
+	while(!gpioRead(FASE)){
+
+	}
+	tickWrite(0);
+	while(gpioRead(FASE)){
+
+	}
+	while(i){
+		if(!gpioRead(FASE)){
+			i=tickRead();
+
+		}
+	}
+}
+
 /*==================[internal data definition]===============================*/
 
 /*==================[external data definition]===============================*/
@@ -96,19 +118,24 @@ int main(void){
 
    /* Inicializar la placa */
    boardConfig();
+   gpioConfig( TRIAC, GPIO_OUTPUT );
+   gpioConfig( CW, GPIO_OUTPUT );
+   gpioConfig( CCW, GPIO_OUTPUT );
+   gpioConfig( DE, GPIO_OUTPUT );
+   gpioConfig( TACO, GPIO_INPUT );
+   gpioConfig( FASE, GPIO_INPUT );
 
+   tickInit(TICKRATE_MS);
    /* ------------- REPETIR POR SIEMPRE ------------- */
+   uint64_t tickCounter;
    while(1) {
+	   tickWrite(0);
+	   tickCounter = tickRead();
+	   delay(1);
+	   tickCounter = tickRead();
+	   delay(1);
 
-      /* Prendo el led azul */
-      gpioWrite( LEDB, ON );
 
-      delay(500);
-
-      /* Apago el led azul */
-      gpioWrite( LEDB, OFF );
-
-      delay(500);
 
    }
 
@@ -256,7 +283,7 @@ int main(void){
       	  delay(500);
       	  gpioWrite( LED3, OFF );
 
-      }-/
+      }
 
    }
 

@@ -58,7 +58,12 @@ extern "C" {
 #endif
 
 /*==================[macros]=================================================*/
-
+#define TRIAC GPIO6
+#define CW GPIO3
+#define CCW GPIO1
+#define DE GPIO5
+#define TACO GPIO4
+#define FASE GPIO2
 /*==================[typedef]================================================*/
 
 /*==================[external data declaration]==============================*/

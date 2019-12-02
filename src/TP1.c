@@ -82,21 +82,18 @@ void myTickHook( void *ptr ){
 
 int medirT(){
 	int i=10;
-	int t=0;
 	int T=0;
-	while(!gpioRead(FASE)){
-
-	}
+	while(gpioRead(Fase));
+	while(!gpioRead(FASE));
 	tickWrite(0);
-	while(gpioRead(FASE)){
-
-	}
-	while(i){
+	do{
+		i--;
 		if(!gpioRead(FASE)){
-			i=tickRead();
-
+			T=T+tickRead();
+			if(!gpioRead(FASE));
 		}
-	}
+	}while(i);
+	return T/10;
 }
 
 /*==================[internal data definition]===============================*/
@@ -125,9 +122,42 @@ int main(void){
    gpioConfig( TACO, GPIO_INPUT );
    gpioConfig( FASE, GPIO_INPUT );
 
+   gpioWrite(TRIAC,OFF);
+   gpioWrite(CW,OFF);
+   gpioWrite(CCW,OFF);
+   gpioWrite(DE,OFF);
+
    tickInit(TICKRATE_MS);
+
+   int T=medirT();
+   int pot=1;
+   int i=0;
+
+   tickWrite(0);
+
+   gpioWrite(CW,ON);
+
+   delay(10);
+
+   while(1){
+	   if(gpioRead(FASE)){
+		   if((int)tickRead()==(T-pot)){
+			   gpioWrite(TRIAC,ON);
+		   	   delayUs(500);
+		   	   gpioWrite(TRIAC,OFF);
+		   	   delayUs(500);
+		   }
+		   if(i=1){
+			   tickWrite(0);
+			   i=0;
+		   }
+	   }
+	   else{
+		   i=1;
+	   }
+   }
    /* ------------- REPETIR POR SIEMPRE ------------- */
-   uint64_t tickCounter;
+/*   uint64_t tickCounter;
    while(1) {
 	   tickWrite(0);
 	   tickCounter = tickRead();
@@ -137,7 +167,7 @@ int main(void){
 
 
 
-   }
+   }*/
 
    /* NO DEBE LLEGAR NUNCA AQUI, debido a que a este programa no es llamado
       por ningun S.O. */

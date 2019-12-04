@@ -83,7 +83,7 @@ void myTickHook( void *ptr ){
 int medirT(){
 	int i=10;
 	int T=0;
-	while(gpioRead(Fase));
+	while(gpioRead(FASE));
 	while(!gpioRead(FASE));
 	tickWrite(0);
 	do{

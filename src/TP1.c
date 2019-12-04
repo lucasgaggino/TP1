@@ -61,7 +61,7 @@ unsigned int delayer=0;
 
 
 void myTickHook( void *ptr ){
-	if(delayer==9){
+
 	 // modificacion para disminuir la frecuencia 10 vecs
 		static bool_t ledState = OFF;
 		gpioMap_t led = (gpioMap_t)ptr;
@@ -75,8 +75,7 @@ void myTickHook( void *ptr ){
 		}
 		gpioWrite( led, ledState );
 		delayer=0;
-	}
-	else{delayer++;}
+
 
  }
 
@@ -88,12 +87,22 @@ int medirT(){
 	tickWrite(0);
 	do{
 		i--;
-		if(!gpioRead(FASE)){
-			T=T+tickRead();
-			if(!gpioRead(FASE));
-		}
+		while(gpioRead(FASE));
+		while(!gpioRead(FASE));
+		T=T+(int)tickRead();
+		tickWrite(0);
 	}while(i);
 	return T/10;
+}
+
+bool tDebug (void){
+
+
+	char buffer[50];
+	//sprintf(buffer, "Fare %d   tick %d \r\n",(int) gpioRead(FASE),(int) tickRead());
+	uartWriteString( UART_USB, buffer );
+
+
 }
 
 /*==================[internal data definition]===============================*/
@@ -128,32 +137,42 @@ int main(void){
    gpioWrite(DE,OFF);
 
    tickInit(TICKRATE_MS);
+   uartConfig( UART_USB, 115200 );
+    uartWriteString( UART_USB, "DEBUG T\r\n" );
 
-   int T=medirT();
-   int pot=1;
+   int T=10;//medirT();
+   int pot=5;
    int i=0;
+   delay(100);
 
+   gpioWrite(LEDR,ON);
    tickWrite(0);
+
 
    gpioWrite(CW,ON);
 
    delay(10);
 
+   while(i<100){
+	   while(gpioRead(FASE));
+	   while(!gpioRead(FASE));
+	   i++;
+   }
+gpioWrite(LEDG,ON);
    while(1){
-	   if(gpioRead(FASE)){
-		   if((int)tickRead()==(T-pot)){
+	   if(!gpioRead(FASE)){
+		   if(((int)tickRead()) >= (T-pot) && i==2){
 			   gpioWrite(TRIAC,ON);
-		   	   delayUs(500);
-		   	   gpioWrite(TRIAC,OFF);
-		   	   delayUs(500);
+		   	   //delayUs(500);
 		   }
-		   if(i=1){
+		   if(i==25){
 			   tickWrite(0);
-			   i=0;
+			   i=2;
 		   }
 	   }
 	   else{
-		   i=1;
+		   gpioWrite(TRIAC,OFF);
+		   i=25;
 	   }
    }
    /* ------------- REPETIR POR SIEMPRE ------------- */
